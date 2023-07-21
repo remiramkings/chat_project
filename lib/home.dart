@@ -18,9 +18,9 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 35,
               width: 35,
-              child: Image.asset('assets/images/logo.jpeg')),
+              child: Image.asset('assets/images/logo.png')),
               SizedBox(width: 15),
-            Text('More')
+            Text('Mor')
           ],),
         ),
         body: Container(

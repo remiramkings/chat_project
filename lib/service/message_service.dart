@@ -15,8 +15,8 @@ class MessageService{
   }
 
   List<MessageModel> messages = [
-    MessageModel(text: "asdasdasd asd", type: MessageType.send, timeStamp: DateTime.now(), user: User(id: 1, name: "You")),
-    MessageModel(text: "sadaj dfs f sdf sdf sdfsdf sd sd sd sd fsd fsdf sdf sdf sdsdoija", type: MessageType.send, timeStamp: DateTime.now(), user: User(id: 1, name: "You"))
+    MessageModel(text: "Hi", type: MessageType.received, timeStamp: DateTime.now(), user: User(id: 1, name: "More")),
+    
   ];
 
   Stream<List<MessageModel>> getMessagesStream(){

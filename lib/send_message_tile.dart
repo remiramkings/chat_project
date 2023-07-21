@@ -1,4 +1,5 @@
 import 'package:chat_project/model/message_model.dart';
+import 'package:chat_project/service/text_to_speech_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -22,46 +23,60 @@ class SendMessageTileState extends State<SendMessageTile> {
       alignment: Alignment.centerRight,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              color: Color.fromARGB(255, 167, 219, 169),
-              boxShadow: [
-                BoxShadow(
-                    color: Color.fromARGB(255, 167, 219, 169), blurRadius: 10)
-              ]),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+        child: IntrinsicWidth(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      'You',
-                      style: TextStyle(color: Color.fromARGB(255, 77, 77, 77)),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: 5),
-              SizedBox(
-                child: Text(widget.message.text),
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Text(getFormatedTime(), style: TextStyle(fontSize: 10)),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      color: Color.fromARGB(255, 167, 219, 169),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color.fromARGB(255, 167, 219, 169), blurRadius: 10)
+                      ]),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        const Text(
+                          'You',
+                          style: TextStyle(color: Color.fromARGB(255, 77, 77, 77)),
+                        ),
+                      const SizedBox(height: 5),
+                      Text(widget.message.text),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(getFormatedTime(), style: const TextStyle(fontSize: 10)),
+                          InkWell(
+                            onTap: (){
+                              TexttoSpeechService.getInstance().speak(widget.message.text);
+                            },
+                            child: const Icon(
+                              Icons.mic,
+                              size: 20,
+                              color: Colors.blue,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
                   ),
-                  Icon(
-                    Icons.mic,
-                    size: 20,
-                  )
-                ],
-              )
+                ),
+              ),
+             const SizedBox(width: 5),
+              Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+                    color: Colors.white
+                    ),
+                    child: Image.asset('assets/images/user.png')
+                  ),
             ],
           ),
         ),
