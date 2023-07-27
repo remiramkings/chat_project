@@ -36,7 +36,7 @@ class _CreateSendMsgComponentState extends State<CreateSendMsgComponent> {
               color: Colors.green,
               ),
               onTap:() async {
-                await MessageService.getInstance().createMessages(MessageModel(text: messageController.text, type: MessageType.send, timeStamp: DateTime.now(), user: User(id: 2, name: 'Adi')));
+                await MessageService.getInstance().createMessages(MessageModel(id:0, text: messageController.text, type: MessageType.send, timeStamp: DateTime.now(), user: User(id: 2, name: 'Adi')));
                 MessageService.getInstance().loadMessages();
                 messageController.text = "";
           

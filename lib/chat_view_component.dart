@@ -1,9 +1,11 @@
 import 'package:chat_project/message_type.dart';
+import 'package:chat_project/providers/message_selection_provider.dart';
 import 'package:chat_project/received_message_tile.dart';
 import 'package:chat_project/send_message_tile.dart';
 import 'package:chat_project/service/message_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 
 import 'model/message_model.dart';
 
@@ -15,8 +17,11 @@ class ChatViewComponent extends StatefulWidget {
 }
 
 class ChatViewComponentState extends State<ChatViewComponent> {
+  
   Stream<List<MessageModel>>? messagesStream;
   ScrollController scrollController = ScrollController();
+
+ 
 
   loadMessges() {
     setState(() {
@@ -34,38 +39,57 @@ class ChatViewComponentState extends State<ChatViewComponent> {
 
   @override
   Widget build(BuildContext context) {
+    var selectionProvider = Provider.of<MessageSelectionProvider>(context);
     return Container(
       color: Color.fromARGB(255, 228, 228, 217),
       child: StreamBuilder<List<MessageModel>>(
-        stream: messagesStream,
-        builder: (context, snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return CircularProgressIndicator.adaptive();
-          }
-          List<MessageModel>? messages = snapshot.data;
-          if(messages == null){
-            return Text("Loading");
-          }
+          stream: messagesStream,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator.adaptive();
+            }
+            List<MessageModel>? messages = snapshot.data;
+            if (messages == null) {
+              return Text("Loading");
+            }
 
-          SchedulerBinding
-            .instance
-            ?.addPostFrameCallback((_) {
-              scrollController.jumpTo(
-                scrollController.position.maxScrollExtent
-              );
+            SchedulerBinding.instance?.addPostFrameCallback((_) {
+              scrollController
+                  .jumpTo(scrollController.position.maxScrollExtent);
             });
 
-          return ListView.builder(
-            controller: scrollController,
-            itemCount: messages.length,
-            itemBuilder: (context, index) {
-              return messages[index].type == MessageType.send
-                  ? SendMessageTile(message: messages[index])
-                  : ReceivedMessageTile(message: messages[index]);
-            },
-          );
-        }
-      ),
+            return ListView.builder(
+              controller: scrollController,
+              itemCount: messages.length,
+              itemBuilder: (context, index) {
+                return messages[index].type == MessageType.send
+                    ? SendMessageTile(
+                        message: messages[index],
+                        isSelected: selectionProvider.isMessageSelected(messages[index]),
+                        onLongPress: () {
+                           selectionProvider.addRemoveMessage(messages[index]);
+                        },
+                        onSelect: () {
+                          if (selectionProvider.isSelectionModeActive()) {
+                            selectionProvider.addRemoveMessage(messages[index]);
+                          }
+                        },
+                      )
+                    : ReceivedMessageTile(
+                        message: messages[index],
+                        isSelected: selectionProvider.isMessageSelected(messages[index]),
+                        onLongPress: () {
+                          selectionProvider.addRemoveMessage(messages[index]);
+                        },
+                        onSelect: () {
+                          if (selectionProvider.isSelectionModeActive()) {
+                            selectionProvider.addRemoveMessage(messages[index]);
+                          }
+                        },
+                      );
+              },
+            );
+          }),
     );
   }
 }

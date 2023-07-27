@@ -43,6 +43,9 @@ dependencies:
   path: ^1.8.3
   open_file: ^3.3.2
   share_plus: ^7.0.2
+  fluttertoast: ^8.2.2
+  provider: ^6.0.5
+  url_launcher: ^6.1.12
   
 
 dev_dependencies:
